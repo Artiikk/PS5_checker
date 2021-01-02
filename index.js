@@ -8,7 +8,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const TelegramBotToken = process.env.BOT_TOKEN;
 const bot = new TelegramBot(TelegramBotToken, { polling: true });
 const CHAT_ID = process.env.CHAT_ID;
-const PORT = process.env.port;
+const PORT = process.env.port || 3000;
 
 const webSitesUrl = [
   {
