@@ -33,7 +33,10 @@ const webSitesUrl = [
 
 async function makeScreenshot(url, name) {
   try {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({ 
+      executablePath: '/usr/bin/chromium-browser',
+      args: ['--no-sandbox'] 
+    });
     const page = await browser.newPage();
     await page.goto(url);
     await page.setViewport({ width: 1366, height: 800 });
