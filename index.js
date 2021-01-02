@@ -45,37 +45,32 @@ async function makeScreenshot(url, name) {
   }
 }
 
-// const sendUpdate = (name, url) => {
-//   bot.sendMessage(
-//     CHAT_ID,
-//     `<b>${name}</b> SCREENSHOT HAS BEEN CHANGED, CHECK THIS LINK \n<a href="${url}">${url}</a>`,
-//     { parse_mode: "HTML" }
-//   );
-// }
+const sendUpdate = (name, url) => {
+  bot.sendMessage(
+    CHAT_ID,
+    `<b>${name}</b> SCREENSHOT HAS BEEN CHANGED, CHECK THIS LINK \n<a href="${url}">${url}</a>`,
+    { parse_mode: "HTML" }
+  );
+}
 
-bot.on('message', msg => {
-  console.log('msg', msg.chat.id)
+app.listen(PORT, '0.0.0.0', () => {
+  schedule.scheduleJob(`*/1 * * * *`, () => {
+    webSitesUrl.forEach(async ({ url, name, oldScreenshot, acceptableMismatch }) => {
+      await makeScreenshot(url, name)
+
+      const newScreenshot = `./newScreenshots/${name}`
+      resemble(newScreenshot)
+        .compareTo(oldScreenshot)
+        .ignoreColors()
+        .onComplete(({ misMatchPercentage }) => {
+          const mismatch = Number(misMatchPercentage)
+          const acceptable_mismatch = Number(acceptableMismatch)
+
+          console.log(name, mismatch)
+          if (mismatch >= acceptable_mismatch) {
+            sendUpdate(name, url)
+          }
+        });
+    })
+  });
 })
-
-// app.listen(PORT, '0.0.0.0', () => {
-//   schedule.scheduleJob(`*/1 * * * *`, () => {
-//     webSitesUrl.forEach(async ({ url, name, oldScreenshot, acceptableMismatch }) => {
-//       // sendUpdate('moyo.png', 'https://www.moyo.ua/igrovaya_pristavka_playstation_5_digital_edition_pervaya_postavka_/475056.html')
-//     //   await makeScreenshot(url, name)
-
-//     //   const newScreenshot = `./newScreenshots/${name}`
-//     //   resemble(newScreenshot)
-//     //     .compareTo(oldScreenshot)
-//     //     .ignoreColors()
-//     //     .onComplete(({ misMatchPercentage }) => {
-//     //       const mismatch = Number(misMatchPercentage)
-//     //       const acceptable_mismatch = Number(acceptableMismatch)
-
-//     //       console.log(name, mismatch)
-//     //       if (mismatch >= acceptable_mismatch) {
-//     //         sendUpdate(name, url)
-//     //       }
-//     //     });
-//     })
-//   });
-// })
