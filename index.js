@@ -1,5 +1,6 @@
 require('dotenv').config();
-const fs = require('fs');
+const express = require('express');
+const app = express();
 const puppeteer = require('puppeteer');
 const schedule = require('node-schedule');
 const resemble = require('node-resemble-js');
@@ -7,6 +8,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const TelegramBotToken = process.env.BOT_TOKEN;
 const bot = new TelegramBot(TelegramBotToken, { polling: true });
 const CHAT_ID = process.env.CHAT_ID;
+const PORT = process.env.port;
 
 const webSitesUrl = [
   {
@@ -51,23 +53,25 @@ const sendUpdate = (name, url) => {
   );
 }
 
-schedule.scheduleJob(`*/1 * * * *`, () => {
-  webSitesUrl.forEach(async ({ url, name, oldScreenshot, acceptableMismatch }) => {
-    sendUpdate('moyo.png', 'https://www.moyo.ua/igrovaya_pristavka_playstation_5_digital_edition_pervaya_postavka_/475056.html')
-  //   await makeScreenshot(url, name)
-
-  //   const newScreenshot = `./newScreenshots/${name}`
-  //   resemble(newScreenshot)
-  //     .compareTo(oldScreenshot)
-  //     .ignoreColors()
-  //     .onComplete(({ misMatchPercentage }) => {
-  //       const mismatch = Number(misMatchPercentage)
-  //       const acceptable_mismatch = Number(acceptableMismatch)
-
-  //       console.log(name, mismatch)
-  //       if (mismatch >= acceptable_mismatch) {
-  //         sendUpdate(name, url)
-  //       }
-  //     });
-  })
-});
+app.listen(PORT, () => {
+  schedule.scheduleJob(`*/1 * * * *`, () => {
+    webSitesUrl.forEach(async ({ url, name, oldScreenshot, acceptableMismatch }) => {
+      sendUpdate('moyo.png', 'https://www.moyo.ua/igrovaya_pristavka_playstation_5_digital_edition_pervaya_postavka_/475056.html')
+    //   await makeScreenshot(url, name)
+  
+    //   const newScreenshot = `./newScreenshots/${name}`
+    //   resemble(newScreenshot)
+    //     .compareTo(oldScreenshot)
+    //     .ignoreColors()
+    //     .onComplete(({ misMatchPercentage }) => {
+    //       const mismatch = Number(misMatchPercentage)
+    //       const acceptable_mismatch = Number(acceptableMismatch)
+  
+    //       console.log(name, mismatch)
+    //       if (mismatch >= acceptable_mismatch) {
+    //         sendUpdate(name, url)
+    //       }
+    //     });
+    })
+  });
+})
