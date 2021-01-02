@@ -53,7 +53,7 @@ const sendUpdate = (name, url) => {
   );
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   schedule.scheduleJob(`*/1 * * * *`, () => {
     webSitesUrl.forEach(async ({ url, name, oldScreenshot, acceptableMismatch }) => {
       sendUpdate('moyo.png', 'https://www.moyo.ua/igrovaya_pristavka_playstation_5_digital_edition_pervaya_postavka_/475056.html')
