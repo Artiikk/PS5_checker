@@ -39,6 +39,7 @@ async function makeScreenshot(url, name) {
     await page.setViewport({ width: 1366, height: 800 })
 
     await page.screenshot({ path: `newScreenshots/${name}` });
+    await browser.close();
     return null
   } catch (e) {
     console.log(e)
